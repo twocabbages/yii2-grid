@@ -194,6 +194,24 @@ class DataColumn extends \yii\grid\DataColumn
             }
         }
     }
+    
+    /**
+     * @inheritdoc
+     */
+    protected function getDataCellValue($model, $key, $index)
+    {
+        if ($this->value !== null) {
+            if (is_string($this->value)) {
+                return ArrayHelper::getValue($model, $this->value);
+            } else {
+//                var_dump($index);exit();
+                return call_user_func($this->value, $model, $key, $index, $this);
+            }
+        } elseif ($this->attribute !== null) {
+            return ArrayHelper::getValue($model, $this->attribute);
+        }
+        return null;
+    }
 
     /**
      * Calculates the summary of an input data based on aggregration function
